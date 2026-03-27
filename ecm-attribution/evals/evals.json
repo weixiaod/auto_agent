@@ -1,0 +1,46 @@
+{
+  "skill_name": "ecm-attribution",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I have an ECM model for housing demand. Here are my coefficients:\n- feature_cols: [\"mortgage_rate\", \"income\", \"population\"]\n- short_run_coefs: {\"mortgage_rate\": -0.4, \"income\": 0.6, \"population\": 0.3}\n- intercept: 0.02\n- gamma: -0.3\n- long_run_coefs: {\"intercept\": 5.0, \"mortgage_rate\": -0.5, \"income\": 0.9, \"population\": 0.4}\n- Y_0: 200.0\n- horizon: 27\n\nScenario A (baseline): mortgage_rate goes from 6.5 to 5.5 linearly, income from 55000 to 62000 linearly, population from 1000 to 1020 linearly.\nScenario B (stress): mortgage_rate stays flat at 6.5, income from 55000 to 59000 linearly, population from 1000 to 1015 linearly.\n\nRun the ECM attribution and tell me what's driving the gap between the two scenarios.",
+      "expected_output": "A Python script is written and executed using ECMAttributor. Results include a waterfall chart (waterfall.png) and attribution CSV. Claude explains which variable (mortgage_rate, income, or population) is the biggest driver of the Y gap, gives the cumulative total gap, mentions the ECT contribution, and confirms residual is ~0.",
+      "files": [],
+      "expectations": [
+        "A Python script is written that imports ECMAttributor from /Users/smile/projects/auto_agent",
+        "The script uses all three feature_cols: mortgage_rate, income, population",
+        "The script calls model.run() and produces output files",
+        "Claude explains the total gap between scenario A and B",
+        "Claude identifies the biggest driver variable by name",
+        "Claude mentions the ECT (error correction term) contribution",
+        "Claude confirms the attribution residual is near zero"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Can you run an ECM attribution for me? Here's my setup:\n\nconfig = {\n    'feature_cols': ['ad_spend', 'price_index', 'competitor_price'],\n    'short_run_coefs': {'ad_spend': 0.25, 'price_index': -0.35, 'competitor_price': 0.15},\n    'intercept': 0.01,\n    'gamma': -0.2,\n    'long_run_coefs': {'intercept': 3.0, 'ad_spend': 0.4, 'price_index': -0.6, 'competitor_price': 0.2},\n    'Y_0': 500.0,\n    'horizon': 27\n}\n\nScenario A: ad_spend increases from 1000 to 1500, price_index stays flat at 110, competitor_price drops from 120 to 100.\nScenario B: ad_spend stays flat at 1000, price_index rises from 110 to 125, competitor_price stays flat at 120.\n\nSave output to ./ecm_output and label the waterfall with readable names (Ad Spend, Price Index, Competitor Price, Error Correction).",
+      "expected_output": "Script runs ECMAttributor with the exact config. Output saved to ./ecm_output. Waterfall uses human-readable labels. Claude prints cumulative attribution table and explains which scenario performs better and why.",
+      "files": [],
+      "expectations": [
+        "Script uses the exact config dict provided by user",
+        "output_dir is set to ./ecm_output",
+        "waterfall_labels maps attr_ad_spend, attr_price_index, attr_competitor_price, attr_ECT to readable names",
+        "Claude explains which scenario produces higher Y",
+        "Claude breaks down the attribution by variable"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "I want to understand how my ECM attribution tool works. I have these two scenarios for a retail sales model:\n\nfeature_cols: [\"foot_traffic\", \"promo_intensity\"]\nshort_run_coefs: {\"foot_traffic\": 0.5, \"promo_intensity\": 0.3}\nintercept: 0.0\ngamma: -0.15\nlong_run_coefs: {\"intercept\": 1.0, \"foot_traffic\": 0.7, \"promo_intensity\": 0.4}\nY_0: 100.0\n\nScenario A: foot_traffic goes from 500 to 700 over 27 months, promo_intensity from 0.2 to 0.4.\nScenario B: foot_traffic goes from 500 to 600, promo_intensity stays at 0.2.\n\nRun the attribution and explain step by step what the ECT term means in this output and why it grows over time.",
+      "expected_output": "Script runs correctly. Claude provides a clear explanation of what ECT means economically — that it captures how much of the long-run disequilibrium between actual Y and the long-run cointegrating relationship is being corrected each period. Claude explains why ECT attribution grows as scenarios diverge.",
+      "files": [],
+      "expectations": [
+        "Script correctly imports and runs ECMAttributor",
+        "Claude explains the economic meaning of ECT in plain language",
+        "Claude explains why the ECT attribution grows over time as Y_hat diverges between scenarios",
+        "Claude distinguishes between short-run variable contributions and the ECT contribution",
+        "Attribution residual is confirmed to be near zero"
+      ]
+    }
+  ]
+}
