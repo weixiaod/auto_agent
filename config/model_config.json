@@ -1,0 +1,34 @@
+{
+  "model_name": "ecm_model_v1",
+  "description": "Pre-fitted ECM coefficients. Update values here when new coefficients are received.",
+
+  "feature_cols": ["price", "income", "rate"],
+
+  "short_run_coefs": {
+    "price": -0.30,
+    "income": 0.50,
+    "rate": -0.10
+  },
+
+  "intercept": 0.05,
+
+  "gamma": -0.25,
+
+  "long_run_coefs": {
+    "intercept": 2.0,
+    "price": -0.40,
+    "income": 0.80,
+    "rate": -0.20
+  },
+
+  "Y_0": 150.0,
+
+  "horizon": 27,
+
+  "waterfall_labels": {
+    "attr_price": "Price",
+    "attr_income": "Income",
+    "attr_rate": "Interest Rate",
+    "attr_ECT": "Error Correction"
+  }
+}
