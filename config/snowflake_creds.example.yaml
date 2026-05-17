@@ -1,0 +1,19 @@
+account:   ${SNOWFLAKE_ACCOUNT}
+user:      ${SNOWFLAKE_USER}
+role:      ${SNOWFLAKE_ROLE}
+warehouse: ${SNOWFLAKE_WAREHOUSE}
+database:  ${SNOWFLAKE_DATABASE}
+schema:    ${SNOWFLAKE_SCHEMA}
+
+# --- Auth: password ---
+password:  ${SNOWFLAKE_PWD}
+
+# --- Auth: key-pair (preferred if corp Snowflake supports it) ---
+# Comment out `password` above and uncomment these:
+# private_key_file:     ${SNOWFLAKE_PRIVATE_KEY_PATH}
+# private_key_file_pwd: ${SNOWFLAKE_PRIVATE_KEY_PWD}
+
+# Secret storage (macOS): do NOT put secrets directly in ~/.zshrc. Use Keychain:
+#   security add-generic-password -s snowflake_pwd -a "$USER" -w
+# then in ~/.zshrc:
+#   export SNOWFLAKE_PWD=$(security find-generic-password -s snowflake_pwd -w)

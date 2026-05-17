@@ -13,7 +13,7 @@ description: >
 # ECM Attribution Skill
 
 You help the user run an attribution analysis using the `ECMAttributor` class at:
-`/Users/smile/projects/auto_agent/ecm_attribution.py`
+`/Users/smile/projects/auto_agent/tools/ecm_attribution.py`
 
 The tool simulates two scenarios forward using an ECM, then decomposes the gap in
 predicted Y between them — period by period and cumulatively — by variable contribution.
@@ -54,7 +54,7 @@ The user may provide these as:
 - Description of how to build them (e.g., "A is baseline, B is a price shock")
 
 ### 3. Output location
-Default: `./output/` relative to the working directory. Ask only if the user cares.
+Default: `./outputs/` relative to the working directory. Ask only if the user cares.
 
 ---
 
@@ -69,7 +69,7 @@ sys.path.insert(0, "/Users/smile/projects/auto_agent")
 
 import pandas as pd
 import numpy as np
-from ecm_attribution import ECMAttributor
+from tools.ecm_attribution import ECMAttributor
 
 # --- Config ---
 config = { ... }  # fill in from user's spec
@@ -114,8 +114,8 @@ After running, always explain the output in plain language. Cover:
 5. **Residual check:** Confirm attribution is exact (residual ≈ 0).
 
 Tell the user where to find the outputs:
-- `./output/waterfall.png` — cumulative waterfall chart
-- `./output/attribution_table.csv` — per-period attribution by variable
+- `./outputs/waterfall.png` — cumulative waterfall chart
+- `./outputs/attribution_table.csv` — per-period attribution by variable
 
 ---
 

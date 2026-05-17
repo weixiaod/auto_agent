@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://auto_agent/schemas/ihs_actuals.json",
+  "title": "IHS econ actuals fetcher output",
+  "description": "Skeleton — field list finalized in data_acquisition.md. additionalProperties stays true until then.",
+  "type": "object",
+  "required": ["source_type", "source_metadata", "schema_version", "data"],
+  "properties": {
+    "source_type": { "const": "ihs_actuals" },
+    "schema_version": { "const": "1.0" },
+    "source_metadata": {
+      "type": "object",
+      "description": "Fetcher-specific fields. TODO(data_acquisition): lock fields — expected: publn_id, yymm_num.",
+      "additionalProperties": true
+    },
+    "data": {
+      "description": "TODO(data_acquisition): lock shape — expected rows with (date, variable, value); may include MA values at t0.",
+      "oneOf": [{ "type": "array" }, { "type": "object" }]
+    }
+  },
+  "additionalProperties": true
+}

@@ -10,28 +10,34 @@ pre-specified ECM coefficients, and initial conditions, this module:
   3. Exports a per-period attribution CSV table and cumulative waterfall chart
 
 Functional form:
-  Long-run:   Y_t = a + Σ bi·Xi_t + u_t
+  Long-run:   Y_t = a + Σ bi·Xi_t + u_t          (sum over feature_long_cols)
   ECT_t       = Y_hat_t - (a + Σ bi·Xi_t)
-  Short-run:  ΔY_hat_t = α + Σ βi·ΔXi_t + γ·ECT_(t-1)
+  Short-run:  ΔY_hat_t = α + Σ βi·ΔXi_t + γ·ECT_(t-1)   (sum over feature_short_cols)
 
 Attribution decomposition (per period t):
   ΔY_A_t - ΔY_B_t = Σ βi·(ΔXi_A_t - ΔXi_B_t) + γ·(ECT_A_(t-1) - ECT_B_(t-1))
+  (sum over feature_short_cols)
+
+feature_short_cols and feature_long_cols may overlap or be entirely distinct.
+Scenario DataFrames must contain columns for all variables in both lists.
 
 Usage:
-    from ecm_attribution import ECMAttributor
+    from tools.ecm_attribution import ECMAttributor
 
     config = {
-        "feature_cols":    ["price", "income", "rate"],
-        "short_run_coefs": {"price": -0.3, "income": 0.5, "rate": -0.1},
+        "feature_short_cols": ["treasury_rate", "unemployment_rate"],
+        "feature_long_cols":  ["treasury_rate", "unemployment_rate", "CPI", "PCE"],
+        "short_run_coefs": {"treasury_rate": -0.3, "unemployment_rate": 0.5},
         "intercept":       0.05,
         "gamma":           -0.25,
-        "long_run_coefs":  {"intercept": 2.0, "price": -0.4, "income": 0.8, "rate": -0.2},
+        "long_run_coefs":  {"intercept": 2.0, "treasury_rate": -0.4,
+                            "unemployment_rate": 0.8, "CPI": -0.1, "PCE": -0.1},
         "Y_0":             150.0,
         "horizon":         27,
     }
 
     model = ECMAttributor(config)
-    results = model.run(scenario_a_df, scenario_b_df, output_dir="./output")
+    results = model.run(scenario_a_df, scenario_b_df, output_dir="./outputs")
 """
 
 import pandas as pd
@@ -45,22 +51,26 @@ from typing import Optional
 class ECMAttributor:
     """
     Generic ECM attribution model. Extend to any use case by specifying
-    feature_cols and coefficients in the config dict.
+    feature_short_cols, feature_long_cols, and coefficients in the config dict.
 
     Parameters
     ----------
     config : dict with keys:
-        feature_cols    : list[str]  — X column names in scenario DataFrames
-        short_run_coefs : dict       — {col: β} short-run ΔX coefficients
-        intercept       : float      — α, ECM intercept (default 0.0)
-        gamma           : float      — γ, speed of adjustment (should be negative)
-        long_run_coefs  : dict       — {col: b, "intercept": a} long-run equation
-        Y_0             : float      — initial level of Y at t=0
-        horizon         : int        — number of periods to simulate (default 27)
+        feature_short_cols : list[str] — variables entering the short-run ΔX equation;
+                                         must match keys in short_run_coefs
+        feature_long_cols  : list[str] — variables entering the long-run ECT equation;
+                                         must match keys in long_run_coefs (excluding "intercept")
+        short_run_coefs    : dict      — {col: β} short-run ΔX coefficients
+        intercept          : float     — α, ECM intercept (default 0.0)
+        gamma              : float     — γ, speed of adjustment (should be negative)
+        long_run_coefs     : dict      — {col: b, "intercept": a} long-run equation
+        Y_0                : float     — initial level of Y at t=0
+        horizon            : int       — number of periods to simulate (default 27)
     """
 
     def __init__(self, config: dict):
-        self.feature_cols = config["feature_cols"]
+        self.feature_short_cols = config["feature_short_cols"]
+        self.feature_long_cols = config["feature_long_cols"]
         self.short_run_coefs = config["short_run_coefs"]
         self.intercept = config.get("intercept", 0.0)
         self.gamma = config["gamma"]
@@ -73,10 +83,10 @@ class ECMAttributor:
     # ------------------------------------------------------------------
 
     def _compute_ect(self, Y: float, X_row: pd.Series) -> float:
-        """ECT_t = Y_t - (a + Σ bi·Xi_t)"""
+        """ECT_t = Y_t - (a + Σ bi·Xi_t)  — sum over feature_long_cols"""
         lr = self.long_run_coefs
         fitted_lr = lr.get("intercept", 0.0) + sum(
-            lr[col] * X_row[col] for col in self.feature_cols
+            lr[col] * X_row[col] for col in self.feature_long_cols
         )
         return Y - fitted_lr
 
@@ -114,16 +124,16 @@ class ECMAttributor:
             row_t = df.iloc[t]
             row_t_minus_1 = df.iloc[t - 1]
 
-            # First differences of X
+            # First differences of X — short-run variables only
             delta_X = {
                 col: row_t[col] - row_t_minus_1[col]
-                for col in self.feature_cols
+                for col in self.feature_short_cols
             }
 
             # Short-run contributions
             sr_contributions = {
                 col: self.short_run_coefs[col] * delta_X[col]
-                for col in self.feature_cols
+                for col in self.feature_short_cols
             }
 
             # ECM prediction
@@ -144,7 +154,7 @@ class ECMAttributor:
                 "ECT_lag":     ECT_prev,
                 "delta_Y_hat": delta_Y_hat,
             }
-            for col in self.feature_cols:
+            for col in self.feature_short_cols:
                 record[f"delta_{col}"] = delta_X[col]
 
             records.append(record)
@@ -187,7 +197,7 @@ class ECMAttributor:
             attr_sum = 0.0
 
             # Short-run variable attributions
-            for col in self.feature_cols:
+            for col in self.feature_short_cols:
                 delta_gap = row_a[f"delta_{col}"] - row_b[f"delta_{col}"]
                 attr = self.short_run_coefs[col] * delta_gap
                 record[f"attr_{col}"] = attr
@@ -252,11 +262,11 @@ class ECMAttributor:
         Y_A_final      : final Y_hat value for Scenario A (from simulate())
         Y_B_final      : final Y_hat value for Scenario B (from simulate())
         """
-        attr_cols = [f"attr_{col}" for col in self.feature_cols] + ["attr_ECT"]
+        attr_cols = [f"attr_{col}" for col in self.feature_short_cols] + ["attr_ECT"]
         cumulative = attribution_df[attr_cols].sum()
 
         # Build display labels
-        default_labels = {f"attr_{col}": col for col in self.feature_cols}
+        default_labels = {f"attr_{col}": col for col in self.feature_short_cols}
         default_labels["attr_ECT"] = "ECT"
         if labels:
             default_labels.update(labels)
@@ -362,7 +372,7 @@ class ECMAttributor:
         self,
         scenario_a: pd.DataFrame,
         scenario_b: pd.DataFrame,
-        output_dir: str = "./output",
+        output_dir: str = "./outputs",
         waterfall_labels: Optional[dict] = None,
         waterfall_title: str = "ECM Attribution — Scenario A vs B (Cumulative)",
     ) -> dict:

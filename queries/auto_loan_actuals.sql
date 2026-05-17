@@ -1,0 +1,11 @@
+-- PURPOSE: Fetch auto loan production actuals. Serves three purposes within one pull:
+--   (1) t0 initial conditions for target variables,
+--   (2) benchmark period (Outlook only),
+--   (3) actuals replacement input (Outlook only).
+-- BIND PARAMS:
+--   :timestamp   (str)  — partition timestamp for the auto loan table
+--   :start_date  (date) — earliest date in range (= t0 - max(history_periods))
+--   :end_date    (date) — latest date (typically today)
+-- OUTPUT COLUMNS: date, segment, variable, value
+-- PLACEHOLDER: real query to be filled on work laptop
+SELECT 1 AS placeholder;

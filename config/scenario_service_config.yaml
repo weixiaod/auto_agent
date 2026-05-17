@@ -1,0 +1,4 @@
+# DEFERRED — Scenario Service integration is on hold.
+# When enabled, this file will carry auth + endpoint info. Keep `enabled: false`
+# so any accidental wiring errors out loudly.
+enabled: false

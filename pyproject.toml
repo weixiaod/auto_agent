@@ -1,0 +1,21 @@
+[project]
+name = "auto_agent"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+  "pandas>=2.0",
+  "numpy>=1.24",
+  "snowflake-connector-python>=3.5",
+  "openpyxl>=3.1",
+  "jsonschema>=4.17",
+  "pyyaml>=6.0",
+  "requests>=2.31",
+  "matplotlib>=3.7",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.4", "pytest-mock>=3.11"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"

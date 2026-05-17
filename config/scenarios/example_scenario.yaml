@@ -1,0 +1,39 @@
+mode: outlook
+run_id: outlook_2026MA               # Outlook convention: outlook_{yyyy}{MA|JA|SA|DA}
+                                     #   MA/JA/SA/DA = March / June / Sept / Dec Assessment
+
+# Two dates — may diverge when enterprise (auto_loan) actuals lag econ actuals.
+t0_date: 2026-02-28                  # assessment as-of; auto_loan initial conditions
+scenario_start_date: 2026-03-31      # econ glue point: actuals stop, forecasts start
+
+auto_loan:
+  timestamp: "2026-02-28T23:59:59"   # partition key for the auto loan table
+
+econ_actuals:
+  publn_id: "IHS_GL_STD"
+  yymm_num: "2603"
+
+econ_forecast:
+  publn_id: "IHS_GL_STD"
+  yymm_num: "2603"
+  scenario_var: "BASELINE"           # Outlook: single scenario
+
+# Industry -> enterprise forecast adjustment, applied inside model_execution skill.
+# Method: "gap" (additive) or "ratio" (multiplicative). Uses the last N months of
+# (enterprise_actual - industry_actual) for gap, or the ratio for ratio.
+enterprise_adjustment:
+  default:
+    method: "ratio"
+    lookback_months: 6
+  overrides:                         # optional per-(target x segment)
+    - target: "pricing"
+      segment: "new_sub_prime"
+      method: "gap"
+      lookback_months: 12
+    - target: "count"
+      segment: "prime"
+      method: "gap"
+      lookback_months: 3
+
+prior_cycle_output_path: "./outputs/prior_cycle_2025q4.csv"
+output_dir: "./outputs"

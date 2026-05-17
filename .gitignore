@@ -1,8 +1,6 @@
-# Generated outputs
-outputs/
-
 # Python
 __pycache__/
+*.pyc
 *.py[cod]
 *.egg-info/
 .venv/
@@ -10,3 +8,18 @@ __pycache__/
 
 # OS
 .DS_Store
+
+# Local tool config
+.claude/
+
+# Run artifacts
+logs/*.json
+outputs/*.xlsx
+outputs/*.csv
+outputs/*.png
+
+# Captured fixtures (raw inputs are too large / sensitive for git)
+tests/fixtures/**/raw_*.csv
+
+# Secrets — only the .example.yaml is committed
+config/snowflake_creds.yaml

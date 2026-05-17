@@ -1,34 +1,126 @@
 {
-  "model_name": "ecm_model_v1",
-  "description": "Pre-fitted ECM coefficients. Update values here when new coefficients are received.",
-
-  "feature_cols": ["price", "income", "rate"],
-
-  "short_run_coefs": {
-    "price": -0.30,
-    "income": 0.50,
-    "rate": -0.10
-  },
-
-  "intercept": 0.05,
-
-  "gamma": -0.25,
-
-  "long_run_coefs": {
-    "intercept": 2.0,
-    "price": -0.40,
-    "income": 0.80,
-    "rate": -0.20
-  },
-
-  "Y_0": 150.0,
-
+  "_comment": "ECM coefficients for all 12 models. All PLACEHOLDER values must be filled from work machine before running the pipeline.",
   "horizon": 27,
 
+  "pricing": {
+    "new_prime": {
+      "feature_short_cols": ["PLACEHOLDER"],
+      "feature_long_cols":  ["PLACEHOLDER"],
+      "short_run_coefs":    {"PLACEHOLDER": null},
+      "long_run_coefs":     {"intercept": null, "PLACEHOLDER": null},
+      "intercept":          null,
+      "gamma":              null,
+      "Y_0":                null
+    },
+    "new_near_prime": {
+      "feature_short_cols": ["PLACEHOLDER"],
+      "feature_long_cols":  ["PLACEHOLDER"],
+      "short_run_coefs":    {"PLACEHOLDER": null},
+      "long_run_coefs":     {"intercept": null, "PLACEHOLDER": null},
+      "intercept":          null,
+      "gamma":              null,
+      "Y_0":                null
+    },
+    "new_sub_prime": {
+      "feature_short_cols": ["PLACEHOLDER"],
+      "feature_long_cols":  ["PLACEHOLDER"],
+      "short_run_coefs":    {"PLACEHOLDER": null},
+      "long_run_coefs":     {"intercept": null, "PLACEHOLDER": null},
+      "intercept":          null,
+      "gamma":              null,
+      "Y_0":                null
+    },
+    "used_prime": {
+      "feature_short_cols": ["PLACEHOLDER"],
+      "feature_long_cols":  ["PLACEHOLDER"],
+      "short_run_coefs":    {"PLACEHOLDER": null},
+      "long_run_coefs":     {"intercept": null, "PLACEHOLDER": null},
+      "intercept":          null,
+      "gamma":              null,
+      "Y_0":                null
+    },
+    "used_near_prime": {
+      "feature_short_cols": ["PLACEHOLDER"],
+      "feature_long_cols":  ["PLACEHOLDER"],
+      "short_run_coefs":    {"PLACEHOLDER": null},
+      "long_run_coefs":     {"intercept": null, "PLACEHOLDER": null},
+      "intercept":          null,
+      "gamma":              null,
+      "Y_0":                null
+    },
+    "used_sub_prime": {
+      "feature_short_cols": ["PLACEHOLDER"],
+      "feature_long_cols":  ["PLACEHOLDER"],
+      "short_run_coefs":    {"PLACEHOLDER": null},
+      "long_run_coefs":     {"intercept": null, "PLACEHOLDER": null},
+      "intercept":          null,
+      "gamma":              null,
+      "Y_0":                null
+    }
+  },
+
+  "count": {
+    "prime": {
+      "feature_short_cols": ["PLACEHOLDER"],
+      "feature_long_cols":  ["PLACEHOLDER"],
+      "short_run_coefs":    {"PLACEHOLDER": null},
+      "long_run_coefs":     {"intercept": null, "PLACEHOLDER": null},
+      "intercept":          null,
+      "gamma":              null,
+      "Y_0":                null
+    },
+    "near_prime": {
+      "feature_short_cols": ["PLACEHOLDER"],
+      "feature_long_cols":  ["PLACEHOLDER"],
+      "short_run_coefs":    {"PLACEHOLDER": null},
+      "long_run_coefs":     {"intercept": null, "PLACEHOLDER": null},
+      "intercept":          null,
+      "gamma":              null,
+      "Y_0":                null
+    },
+    "sub_prime": {
+      "feature_short_cols": ["PLACEHOLDER"],
+      "feature_long_cols":  ["PLACEHOLDER"],
+      "short_run_coefs":    {"PLACEHOLDER": null},
+      "long_run_coefs":     {"intercept": null, "PLACEHOLDER": null},
+      "intercept":          null,
+      "gamma":              null,
+      "Y_0":                null
+    }
+  },
+
+  "avg_loan_amount": {
+    "prime": {
+      "feature_short_cols": ["PLACEHOLDER"],
+      "feature_long_cols":  ["PLACEHOLDER"],
+      "short_run_coefs":    {"PLACEHOLDER": null},
+      "long_run_coefs":     {"intercept": null, "PLACEHOLDER": null},
+      "intercept":          null,
+      "gamma":              null,
+      "Y_0":                null
+    },
+    "near_prime": {
+      "feature_short_cols": ["PLACEHOLDER"],
+      "feature_long_cols":  ["PLACEHOLDER"],
+      "short_run_coefs":    {"PLACEHOLDER": null},
+      "long_run_coefs":     {"intercept": null, "PLACEHOLDER": null},
+      "intercept":          null,
+      "gamma":              null,
+      "Y_0":                null
+    },
+    "sub_prime": {
+      "feature_short_cols": ["PLACEHOLDER"],
+      "feature_long_cols":  ["PLACEHOLDER"],
+      "short_run_coefs":    {"PLACEHOLDER": null},
+      "long_run_coefs":     {"intercept": null, "PLACEHOLDER": null},
+      "intercept":          null,
+      "gamma":              null,
+      "Y_0":                null
+    }
+  },
+
   "waterfall_labels": {
-    "attr_price": "Price",
-    "attr_income": "Income",
-    "attr_rate": "Interest Rate",
-    "attr_ECT": "Error Correction"
+    "attr_ECT": "Error Correction",
+    "PLACEHOLDER": "fill variable display names from work machine"
   }
 }
